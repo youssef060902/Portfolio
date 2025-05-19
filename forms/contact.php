@@ -70,13 +70,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->isHTML(true);
         $mail->Subject = "Nouveau message de contact de $name";
         $mail->Body = "
-            <h2>Nouveau message de contact</h2>
-            <p><strong>Nom :</strong> $name</p>
-            <p><strong>Email :</strong> $email</p>
-            <p><strong>Sujet :</strong> $subject</p>
-            <p><strong>Message :</strong></p>
-            <p>" . nl2br(htmlspecialchars($message)) . "</p>
-        ";
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+                .content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 0 0 5px 5px; }
+                .message-box { background-color: white; padding: 15px; border-left: 4px solid #2c3e50; margin: 15px 0; }
+                .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+                .label { font-weight: bold; color: #2c3e50; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>Nouveau Message de Contact</h2>
+                </div>
+                <div class='content'>
+                    <p><span class='label'>De :</span> $name</p>
+                    <p><span class='label'>Email :</span> $email</p>
+                    <p><span class='label'>Sujet :</span> $subject</p>
+                    <div class='message-box'>
+                        <p><span class='label'>Message :</span></p>
+                        <p>" . nl2br(htmlspecialchars($message)) . "</p>
+                    </div>
+                </div>
+                <div class='footer'>
+                    <p>Ce message a été envoyé depuis le formulaire de contact de votre portfolio.</p>
+                </div>
+            </div>
+        </body>
+        </html>";
+        
+        // Version texte pour les clients mail qui ne supportent pas HTML
+        $mail->AltBody = "Nouveau message de contact\n\n" .
+                        "De : $name\n" .
+                        "Email : $email\n" .
+                        "Sujet : $subject\n\n" .
+                        "Message :\n" . $message;
         
         $mail->send();
         
